@@ -1,0 +1,127 @@
+
+{% extends "layout.html.twig" %}
+
+
+{% block content %}
+<h1>Sales</h1>
+
+<h6>User : {{  app.session.get('username') }} Fullname :  {{  app.session.get('fullname') }} email:  {{  app.session.get('email') }}</h6>
+
+<script>
+$(document).ready(function() {
+    var cl = console.log 
+    let Data = null 
+   	$.ajax({
+       url: '../sales/data',  
+		success: function(data){
+            Data = data
+            RefreshTable()
+        },
+		error: function (xhr, textStatus, errorThrown) {
+            cl (  " Error " ,textStatus )
+        }
+	});
+
+function RefreshTable () {
+            formatHeader(Data)
+            formatData ( Data)
+
+}
+
+function formatHeader (data)  {
+    let buffer = `<tr>`;
+    data.column.forEach ( record => {
+        if ( !record.subHeaders) {
+            buffer +=  ` <th class="sort_product" title=${record.field} rowspan="2">  ${record.header} </th> ` 
+        } else {
+            buffer +=  ` <th class="sort_product"  colspan="4" scope="colgroup" > ${record.header} </th> ` 
+        }
+    })
+    buffer += `</tr>`;
+
+    buffer += `<tr>`;
+    data.column.forEach ( record => {
+        if ( record.subHeaders) {
+             record.subHeaders.forEach ( record => {
+                buffer +=  `<th class="sort_product" title=${record.field} scope="colgroup"> ${record.header}</th>`
+             })
+        }
+    })
+    buffer += `</tr>`;
+
+    $("#id_head").html("")
+    $("#id_head").append(buffer)
+}
+
+function formatData (data)  {
+    let buffer = ``;
+    data.data.forEach ( record => {
+         buffer += `<tr>`;
+         let total = 0 
+            buffer +=  ` <th >  ${record.productID} </th> ` 
+            buffer +=  ` <th >  ${record.productName} </th> ` 
+
+            buffer +=  ` <th>  ${record.salesQ1} </th> ` 
+            buffer +=  ` <th>  ${record.salesQ2} </th> ` 
+            buffer +=  ` <th>  ${record.salesQ3} </th> ` 
+            buffer +=  ` <th>  ${record.salesQ4} </th> ` 
+            total = record.salesQ1 + record.salesQ2 +  record.salesQ3 + record.salesQ4
+            buffer +=  ` <th>  ${total} </th> ` 
+        buffer += `</tr>`;
+    })
+
+    $("#id_body").html("")
+    $("#id_body").append(buffer)
+}
+
+    $(document).on( "dblclick",".sort_product", function (event) {
+	event.preventDefault();
+        let text =
+        Sort( event.target.title )
+    })
+
+function Sort (text) {
+    function compare ( a , b  ) {
+            if ( a[text] < b[text] ) return 1;
+            if ( a[text] > b[text] ) return -1;
+            if ( a[text] == b[text] ) return 0;
+        return 0
+    }
+    Data.data.sort (compare )    
+    RefreshTable ()
+}
+
+});
+
+</script>
+<h5>Double click on Column Name to sort </h5>
+<table  class="table table-striped">
+ <col>
+ <colgroup span="4"></colgroup>
+
+    <thead id="id_head">
+        <tr>
+            <th rowspan="2"> Product Id </th>
+            <th rowspan="2"> Product name </th>
+            <th colspan="4" scope="colgroup"> Sales </th>
+            <th rowspan="2">Total Sales </th>
+        </tr>
+        <tr>
+            <th scope="colgroup">Q1</th>
+            <th scope="colgroup">Q2</th>
+            <th scope="colgroup">Q3</th>
+            <th scope="colgroup">Q4</th>
+        </tr>
+
+    </thead>
+
+    <tbody id="id_body" >
+    </tbody>
+
+
+
+</table>
+
+
+
+{% endblock %}

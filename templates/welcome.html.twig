@@ -1,0 +1,17 @@
+
+{% extends "layout.html.twig" %}
+
+
+{% block content %}
+<h1>Welcome</h1>
+
+<h6>User : {{  app.session.get('username') }} Fullname :  {{  app.session.get('fullname') }} email:  {{  app.session.get('email') }}</h6>
+<ul>
+    <li>
+        <a class="nav-link " href="{{ path('product_add') }}" tabindex="-1" aria-disabled="true">New Product</a>
+    </li>
+    <li>
+        <a class="nav-link " href="{{ path('sales_list') }}" tabindex="-1" aria-disabled="true">Sales</a>
+    </li>
+</ul>
+{% endblock %}

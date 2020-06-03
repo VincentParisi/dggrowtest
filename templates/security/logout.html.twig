@@ -1,0 +1,13 @@
+{# templates/Advert/index.html.twig #}
+
+{% extends "layout.html.twig" %}
+
+
+{% block content %}
+<h1>Loggout  </h1>
+
+
+<form action="{{ path('logout_check') }}" method="post">
+    <button type="submit">Logout</button>
+</form>
+{% endblock %}

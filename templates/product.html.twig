@@ -1,0 +1,148 @@
+
+{% extends "layout.html.twig" %}
+
+
+{% block content %}
+<h1>Add Product</h1>
+
+<h6>User : {{  app.session.get('username') }} Fullname :  {{  app.session.get('fullname') }} email:  {{  app.session.get('email') }}</h6>
+
+<script>
+$(document).ready(function() {
+    var cl = console.log 
+    let Data = null 
+   	$.ajax({
+       url: '../sales/data',  
+		success: function(data){
+            Data = data
+            RefreshTable()
+        },
+		error: function (xhr, textStatus, errorThrown) {
+            cl (  " Error " ,textStatus )
+        }
+	});
+
+function RefreshTable () {
+            formatHeader(Data)
+            formatData ( Data)
+
+}
+
+function formatHeader (data)  {
+    let buffer = `<tr>`;
+    data.column.forEach ( record => {
+        if ( !record.subHeaders) {
+            buffer +=  ` <th class="sort_product" title=${record.field} rowspan="2">  ${record.header} </th> ` 
+        } else {
+            buffer +=  ` <th class="sort_product"  colspan="4" scope="colgroup" > ${record.header} </th> ` 
+        }
+    })
+    buffer += `</tr>`;
+
+    buffer += `<tr>`;
+    data.column.forEach ( record => {
+        if ( record.subHeaders) {
+             record.subHeaders.forEach ( record => {
+                buffer +=  `<th class="sort_product" title=${record.field} scope="colgroup"> ${record.header}</th>`
+             })
+        }
+    })
+    buffer += `</tr>`;
+
+    $("#id_head").html("")
+    $("#id_head").append(buffer)
+}
+
+function formatData (data)  {
+    let buffer = ``;
+    data.data.forEach ( record => {
+         buffer += `<tr>`;
+         let total = 0 
+            buffer +=  ` <th >  ${record.productID} </th> ` 
+            buffer +=  ` <th >  ${record.productName} </th> ` 
+
+            buffer +=  ` <th>  ${record.salesQ1} </th> ` 
+            buffer +=  ` <th>  ${record.salesQ2} </th> ` 
+            buffer +=  ` <th>  ${record.salesQ3} </th> ` 
+            buffer +=  ` <th>  ${record.salesQ4} </th> ` 
+            total = record.salesQ1 + record.salesQ2 +  record.salesQ3 + record.salesQ4
+            buffer +=  ` <th>  ${total} </th> ` 
+        buffer += `</tr>`;
+    })
+
+    $("#id_body").html("")
+    $("#id_body").append(buffer)
+}
+
+    $(document).on( "dblclick",".sort_product", function (event) {
+	event.preventDefault();
+        let text =
+        Sort( event.target.title )
+    })
+
+function Sort (text) {
+    function compare ( a , b  ) {
+            if ( a[text] < b[text] ) return 1;
+            if ( a[text] > b[text] ) return -1;
+            if ( a[text] == b[text] ) return 0;
+        return 0
+    }
+    Data.data.sort (compare )    
+    RefreshTable ()
+}
+
+function submitForm () {
+   	$.ajax({
+       url: '../product/add',  
+       type: 'POST',
+
+		success: function(data){
+            $("#id_message").append (`<h6> ${data} </h6>`)
+        },
+		error: function (xhr, textStatus, errorThrown) {
+            $("#id_message").append (`<h6>Error sublit form </h6>`)
+        }
+	});
+
+}
+
+$( "#productadd" ).submit(function( event ) {
+    event.preventDefault();
+    submitForm ();
+});
+
+});
+
+</script>
+<div id="id_message"> </div>
+<form  id="productadd"  >
+  <div class="form-group">
+    <label for="productname">Product Name</label>
+    <input type="text" class="form-control" id="productname" maxlength="50"  required >
+  </div>
+
+  <div class="form-group">
+    <label for="productid">Product Id</label>
+    <input type="number" class="form-control" id="productid" maxlength="13"  required >
+  </div>
+
+  <div class="form-group">
+    <label for="productmanager">Product manager</label>
+    <input type="text" class="form-control" id="productmanager" maxlength="30"  >
+  </div>
+
+  <div class="form-group">
+    <label for="salesstartdate">Sales Start Date</label>
+    <input type="date" class="form-control" id="salesstartdate"  maxlength="10"  required >
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="reset" class="btn btn-primary">reset</button>
+</form>
+
+</form>
+
+
+
+
+{% endblock %}

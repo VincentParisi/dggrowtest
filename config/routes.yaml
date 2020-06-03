@@ -1,0 +1,30 @@
+home:
+    path: /
+    controller: 'App\Controller\SecurityController::login'
+
+login:
+    path: /login
+    controller: 'App\Controller\SecurityController::login'
+
+login_check:
+    path: /login/check
+    controller: 'App\Controller\SecurityController::login_check'
+    methods:  [POST]
+
+sales_list:
+    path: /sales/table
+    controller: 'App\Controller\SecurityController::displayTable'
+
+product_add:
+    path: /product/add
+    controller: 'App\Controller\SecurityController::ProductAdd'
+
+    
+logout:
+    path: /logout
+    controller: 'App\Controller\SecurityController::logout'
+
+logout_check:
+    path: /logout/check
+    controller: 'App\Controller\SecurityController::logout_check'
+        

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+
+    </head>
+    <body>
+<ul class="nav nav-pills ">
+
+
+
+  <li class="nav-item">
+    <a class="nav-link " href="{{ path('sales_list') }}" tabindex="-1" aria-disabled="true">Sales</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link " href="{{ path('product_add') }}" tabindex="-1" aria-disabled="true">Add Product</a>
+  </li>
+
+
+  <li class="nav-item">
+    <a class="nav-link " href="{{ path('login') }}" tabindex="-1" aria-disabled="true">Login</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link " href="{{ path('logout') }}" tabindex="-1" aria-disabled="true">Logout</a>
+  </li>
+
+</ul>
+  <div class="container">
+  <section class="col-10 bg-light" >
+        {% block content  %}{% endblock %}
+  </section>
+  </div>
+<footer class="footer bg-dark text-white fixed-bottom">
+     <div class="container">Test
+     </div>
+</footer>
+
+    </body>
+</html>
